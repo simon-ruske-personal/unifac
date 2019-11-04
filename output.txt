@@ -1,0 +1,60 @@
+Timer unit: 3.94743e-07 s
+
+Total time: 34.5065 s
+File: unifac.py
+Function: run at line 7
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+     7                                           @profile
+     8                                           def run(file_name_flag, file_name_stoich):
+     9                                           
+    10         1           14     14.0      0.0  	start = clock()
+    11                                           	#file_name_flag = sys.argv[1]
+    12                                           	#file_name_stoich = sys.argv[2]
+    13         1            4      4.0      0.0  	rows = []
+    14         1            3      3.0      0.0  	cols = []
+    15         1            2      2.0      0.0  	vals = []
+    16         1            3      3.0      0.0  	group_flag_array = []
+    17                                           
+    18         1         8160   8160.0      0.0  	with open(file_name_flag, "r") as f, open(file_name_stoich, "r") as g:
+    19         1        44865  44865.0      0.1  		n_rows, n_cols = f.readline().strip('\n').split()
+    20         1        71497  71497.0      0.1  		g.readline().strip('\n').split()
+    21         1           19     19.0      0.0  		n_rows, n_cols = int(n_rows), int(n_cols)
+    22    103667      1992041     19.2      2.3  		for i, (x, y) in enumerate(zip(f, g)):
+    23   8707944     34764162      4.0     39.8  			for item_1, item_2 in zip(x[:-1].split(' '), y[:-1].split(' ')):
+    24   8604278     30237115      3.5     34.6  				if item_1 != '00':
+    25    685492      2699702      3.9      3.1  					rows.append(i)
+    26    685492      3443704      5.0      3.9  					cols.append(int(item_1))
+    27    685492      3283673      4.8      3.8  					vals.append(int(item_2))
+    28    685492      3105964      4.5      3.6  					if item_1 not in group_flag_array:
+    29        38          157      4.1      0.0  						group_flag_array.append(item_1)
+    30                                           
+    31         1          419    419.0      0.0  	group_flag_array = np.array(group_flag_array, 'int')
+    32         1          117    117.0      0.0  	group_flag_array.sort()
+    33         1          122    122.0      0.0  	d = dict(zip(group_flag_array, range(len(group_flag_array))))
+    34    685493      2372404      3.5      2.7  	for i in range(len(cols)):
+    35    685492      2960233      4.3      3.4  		cols[i] = d[cols[i]]
+    36                                           
+    37         1            4      4.0      0.0  	molecules = n_rows
+    38         1           10     10.0      0.0  	maxGroupNum_int = len(group_flag_array)	
+    39         1            4      4.0      0.0  	T=298.15
+    40         1       469497 469497.0      0.5  	v = coo_matrix((vals, (rows, cols)), shape = (molecules, maxGroupNum_int))
+    41         1        20305  20305.0      0.0  	v = v.toarray()
+    42                                           				
+    43         1         4140   4140.0      0.0  	x = np.ones(molecules) / molecules # 1/ molecules for each molecules
+    44         1       484924 484924.0      0.6  	UFC_Data_Q = np.genfromtxt('Q.txt', dtype='float32')
+    45         1        91116  91116.0      0.1  	UFC_Data_R = np.genfromtxt('R.txt', dtype='float32')
+    46         1       124450 124450.0      0.1  	UFC_Data_main = np.genfromtxt('UFC_Data_main.txt', dtype = 'int') 
+    47         1        72914  72914.0      0.1  	UFC_Data2 = np.genfromtxt('UFC_Data2.txt', dtype = 'float32')				
+    48         1           14     14.0      0.0  	end = clock()	
+    49                                           
+    50         1          475    475.0      0.0  	print('Reading files and pre unifac: ', (end - start) * 1000, ' ms')
+    51                                           
+    52         1            9      9.0      0.0  	start = clock()
+    53         1          115    115.0      0.0  	with np.errstate(divide = 'ignore', invalid = 'ignore'):
+    54         1      1156775 1156775.0      1.3  		gamma = UNIFAC(molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2, group_flag_array, maxGroupNum_int, T)
+    55         1           32     32.0      0.0  	end = clock()
+    56         1          898    898.0      0.0  	print('Running UNIFAC: ', (end-start) * 1000, 'ms')
+    57         1         4876   4876.0      0.0  	print(gamma)
+
