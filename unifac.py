@@ -1,12 +1,36 @@
-import numpy as np
-import sys
+import os, sys
 import numpy as np
 from time import clock
 from scipy.sparse import coo_matrix
 
+def correct_number_of_paremeters():
+  if len(sys.argv) != 3:
+    raise ValueError("Two files should be specified including a "
+                     "flag file and stoich file.")
+ 
+def raise_input_errors(errors):
+  if len(errors) > 0:
+    raise OSError(" ".join(errors))
+ 
+def both_files_exist(file_name_flag, file_name_stoich):
+  errors = []
+  if not os.path.exists(file_name_flag):
+    errors.append("The flag file specified (first argument) does not exist.")
+    
+  if not os.path.exists(file_name_stoich):
+    errors.append("The stoich file specified (second argument) does not exist.")
+    
+  raise_input_errors(errors)
+                     
+def read_and_validate_input_parameters():
+  correct_number_of_paremeters()
+  file_name_flag, file_name_stoich = sys.argv[1], sys.argv[2]
+  both_files_exist(file_name_flag, file_name_stoich)
+  return file_name_flag, file_name_stoich
+
 start = clock()
-file_name_flag = sys.argv[1]
-file_name_stoich = sys.argv[2]
+file_name_flag, file_name_stoich = read_and_validate_input_parameters()
+
 rows = []
 cols = []
 vals = []
