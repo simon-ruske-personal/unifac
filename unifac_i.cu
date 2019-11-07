@@ -606,7 +606,8 @@ int main()
 
     /// Step 2.1 Calculate Theta 
 
-	float* d_xv = cudaMalloc((void**) &d_xv, maxGroupNum * sizeof(float));
+	float* d_xv;
+  cudaMalloc((void**) &d_xv, maxGroupNum * sizeof(float));
     cublasSgemv(handle, CUBLAS_OP_T, molecules, maxGroupNum, &al, d_V, molecules, d_x, 1, &bet, d_xv, 1);
     multiplyGPU<<<1024, 1024>>>(d_Q, d_xv, d_Theta, maxGroupNum);
 	cudaFree(d_xv);
