@@ -1,4 +1,4 @@
-# CUDA & Python unifac
+# CUDA & Python UNIFAC
 
 The following repository includes a Python and CUDA implementation of the UNIFAC model (https://en.wikipedia.org/wiki/UNIFAC). The primary purpose of the Python implementation was to outline the model before developing the CUDA implmentation.  
 
