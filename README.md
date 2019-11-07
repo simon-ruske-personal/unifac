@@ -30,4 +30,11 @@ Run the following from the Native Tools Command Prompt
 ```
 
 #### Executing
-TODO: Allow for arguments to be passed in for the file names similar to functionality in the Python implmenetation
+At the moment, the implementation expects, Q.txt, R.txt, UFC_Data2.txt, UFC_Data_main.txt, v.txt and x.txt to be set in the current directory.
+ 
+After the source has been compiled run
+```
+> unifac.
+```
+
+TODO: allow for arguments to be passed in for the file names similar to functionality in the Python implmenetation
