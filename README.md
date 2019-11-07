@@ -34,7 +34,7 @@ At the moment, the implementation expects, Q.txt, R.txt, UFC_Data2.txt, UFC_Data
  
 After the source has been compiled run
 ```
-> unifac.
+> unifac.exe
 ```
 
 TODO: allow for arguments to be passed in for the file names similar to functionality in the Python implmenetation
