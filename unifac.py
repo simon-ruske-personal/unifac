@@ -28,28 +28,48 @@ def read_and_validate_input_parameters():
   both_files_exist(file_name_flag, file_name_stoich)
   return file_name_flag, file_name_stoich
 
+def initialise_input_file_lists():
+  rows, cols, vals, group_flag_array = [], [], [], []
+  return rows, cols, vals, group_flag_array
+
+def get_number_of_rows_and_columns(flag_file, stoich_file):
+  n_rows, n_cols = flag_file.readline().strip('\n').split()
+  stoich_file.readline().strip('\n').split()
+  n_rows, n_cols = int(n_rows), int(n_cols)
+  return n_rows, n_cols
+
+def split_line(line):
+  return line[:-1].split(' ')
+
+def load_data(flag_file, stoich_file):
+  rows, cols, vals, group_flag_list = initialise_input_file_lists()
+  for i, (flag_line, stoich_line) in enumerate(zip(flag_file, stoich_file)):
+    for flag, stoich in zip(split_line(flag_line), split_line(stoich_line)):
+      if flag != '00':
+        rows.append(i)
+        cols.append(int(flag))
+        vals.append(int(stoich))
+        if flag not in group_flag_list:
+          group_flag_list.append(flag)
+          
+  group_flag_array = np.array(group_flag_list, 'int')
+  return rows, cols, vals, group_flag_array
+  
+def read_input_files():
+  
+  with open(file_name_flag, "r") as flag_file,\
+       open(file_name_stoich, "r") as stoich_file:
+    n_rows, n_cols = get_number_of_rows_and_columns(flag_file, stoich_file)
+    rows, cols, vals, group_flag_array = load_data(flag_file, stoich_file)
+       
+  return n_rows, n_cols, rows, cols, vals, group_flag_array
+
 start = clock()
 file_name_flag, file_name_stoich = read_and_validate_input_parameters()
 
-rows = []
-cols = []
-vals = []
-group_flag_array = []
+n_rows, n_cols, rows, cols, vals, group_flag_array = read_input_files()
 
-with open(file_name_flag, "r") as f, open(file_name_stoich, "r") as g:
-	n_rows, n_cols = f.readline().strip('\n').split()
-	g.readline().strip('\n').split()
-	n_rows, n_cols = int(n_rows), int(n_cols)
-	for i, (x, y) in enumerate(zip(f, g)):
-		for item_1, item_2 in zip(x[:-1].split(' '), y[:-1].split(' ')):
-			if item_1 != '00':
-				rows.append(i)
-				cols.append(int(item_1))
-				vals.append(int(item_2))
-				if item_1 not in group_flag_array:
-					group_flag_array.append(item_1)
 
-group_flag_array = np.array(group_flag_array, 'int')
 group_flag_array.sort()
 d = dict(zip(group_flag_array, range(len(group_flag_array))))
 for i in range(len(cols)):
