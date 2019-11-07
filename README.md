@@ -30,7 +30,7 @@ Run the following from the Native Tools Command Prompt
 ```
 
 #### Executing
-At the moment, the implementation expects, Q.txt, R.txt, UFC_Data2.txt, UFC_Data_main.txt, v.txt and x.txt to be set in the current directory.
+At the moment, the implementation expects, Q.txt, R.txt, UFC_Data2.txt, UFC_Data_main.txt, v.txt and x.txt to be present in the current directory.
  
 After the source has been compiled run
 ```
