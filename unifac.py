@@ -1,6 +1,5 @@
-import os, sys
+import os, sys, time
 import numpy as np
-from time import clock
 from scipy.sparse import coo_matrix
 
 def correct_number_of_paremeters():
@@ -53,6 +52,7 @@ def load_data(flag_file, stoich_file):
           group_flag_list.append(flag)
           
   group_flag_array = np.array(group_flag_list, 'int')
+  group_flag_array.sort()
   return rows, cols, vals, group_flag_array
   
 def read_input_files():
@@ -64,13 +64,11 @@ def read_input_files():
        
   return n_rows, n_cols, rows, cols, vals, group_flag_array
 
-start = clock()
+start = time.perf_counter()
 file_name_flag, file_name_stoich = read_and_validate_input_parameters()
 
 n_rows, n_cols, rows, cols, vals, group_flag_array = read_input_files()
 
-
-group_flag_array.sort()
 d = dict(zip(group_flag_array, range(len(group_flag_array))))
 for i in range(len(cols)):
 	cols[i] = d[cols[i]]
@@ -86,7 +84,7 @@ UFC_Data_Q = np.genfromtxt('Q.txt', dtype='float32')
 UFC_Data_R = np.genfromtxt('R.txt', dtype='float32')
 UFC_Data_main = np.genfromtxt('UFC_Data_main.txt', dtype = 'int') 
 UFC_Data2 = np.genfromtxt('UFC_Data2.txt', dtype = 'float32')				
-end = clock()	
+end = time.perf_counter()	
 
 print('Reading files and pre unifac: ', (end - start) * 1000, ' ms')
 
@@ -166,9 +164,9 @@ def UNIFAC(molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, \
 	gamma = np.exp(ln_gamma)
 	return(gamma)
 
-start = clock()
+start = time.perf_counter()
 with np.errstate(divide = 'ignore', invalid = 'ignore'):
     gamma = UNIFAC(molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2, group_flag_array, maxGroupNum_int, T)
-end = clock()
+end = time.perf_counter()
 print('Running UNIFAC: ', (end-start) * 1000, 'ms')
 print(gamma)
