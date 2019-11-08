@@ -740,7 +740,7 @@ int main()
     cublasSgemv(handle, CUBLAS_OP_T, maxGroupNum, maxGroupNum, &al, d_Psi, maxGroupNum, d_Theta, 1, &bet, d_thePsi, 1);
     
     // Perform the elementwise division : Theta / ThePsi and store in d_theDiv
-    divideGPU<<<1024, 1024>>>(d_Theta, d_thePsi, d_theDiv, molecules * maxGroupNum);
+    divideGPU<<<1024, 1024>>>(d_Theta, d_thePsi, d_theDiv, maxGroupNum);
 
     // Perform the second matrix multiplication d_theDiv * Psi (transpose)
     cublasSgemv(handle, CUBLAS_OP_N, maxGroupNum, maxGroupNum, &al, d_Psi, maxGroupNum, d_theDiv, 1, &bet, d_thePsi_t, 1);
