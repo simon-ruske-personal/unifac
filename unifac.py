@@ -80,8 +80,8 @@ v = coo_matrix((vals, (rows, cols)), shape = (molecules, maxGroupNum_int))
 v = v.toarray()
 			
 x = np.ones(molecules) / molecules # 1/ molecules for each molecules
-UFC_Data_Q = np.genfromtxt('Q.txt', dtype='float32')
-UFC_Data_R = np.genfromtxt('R.txt', dtype='float32')
+UFC_Data_Q = np.genfromtxt(os.path.join("model_parameters", "Q.txt"), dtype='float32')
+UFC_Data_R = np.genfromtxt(os.path.join("model_parameters", "R.txt"), dtype='float32')
 UFC_Data_main = np.genfromtxt('UFC_Data_main.txt', dtype = 'int') 
 UFC_Data2 = np.genfromtxt('UFC_Data2.txt', dtype = 'float32')				
 end = time.perf_counter()	
