@@ -15,7 +15,7 @@ Pass in a group flag and group stoich file as arguments e.g.
 > python unifac.py test_files\group_flag_1.txt test_files\group_stoich_1.txt
 ```
 
-### CUDA version
+### CUDA version - In Progress
 
 #### Prerequisites
 At the moment the implementation has been tested using the following:
