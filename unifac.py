@@ -67,8 +67,8 @@ def read_input_files(file_name_flag, file_name_stoich):
 def read_parameter_files():
 	UFC_Data_Q = np.genfromtxt(os.path.join("model_parameters", "Q.txt"), dtype='float32')
 	UFC_Data_R = np.genfromtxt(os.path.join("model_parameters", "R.txt"), dtype='float32')
-	UFC_Data_main = np.genfromtxt('UFC_Data_main.txt', dtype = 'int') 
-	UFC_Data2 = np.genfromtxt('UFC_Data2.txt', dtype = 'float32')
+	UFC_Data_main = np.genfromtxt(os.path.join("model_parameters", 'UFC_Data_main.txt'), dtype = 'int') 
+	UFC_Data2 = np.genfromtxt(os.path.join("model_parameters", 'UFC_Data2.txt'), dtype = 'float32')
 	return UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2
 
 def construct_v(cols, rows, vals, group_flag_array, molecules, maxGroupNum_int):
