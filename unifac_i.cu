@@ -836,7 +836,7 @@ int main( int argc, char *argv[] )
     // Print d_ln_Gamma
     cudaThreadSynchronize();
     float* ln_Gamma_k = (float*) malloc(sizeof(float) * maxGroupNum);
-    cublasGetVector(maxGroupNum, sizeof(*ln_Gamma_k), d_ln_Gamma_k, 1, ln_Gamma_k, 1); 
+    cublasGetVector(maxGroupNum, sizeof(*ln_Gamma_k), d_ln_gamma_c, 1, ln_Gamma_k, 1); 
     for(int i = 0; i < maxGroupNum; i++)
         printf("%f ", ln_Gamma_k[i]);
     printf("\n");    
