@@ -1,0 +1,5 @@
+python_validation_files/
+cuda_validation_files/
+*.exe
+*.exp
+*.lib
