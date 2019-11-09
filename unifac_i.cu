@@ -203,8 +203,8 @@ int main()
     float xdotq;
 	
     // scalar variables
-    int maxGroupNum = 38;
-    int molecules = 9999;
+    int maxGroupNum = 23;
+    int molecules = 183;
     int z = 10; 
     float T = 298.149994;
     	
