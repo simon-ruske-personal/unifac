@@ -236,6 +236,8 @@ void LoadFilePointers(char* configFilename, FilePointers* filePointers)
 			(*filePointers).UFC_Data_R_file = fopen(value, "r");
 		} else if (strcmp(key, "Data2") == 0) {
 			(*filePointers).UFC_Data2_file = fopen(value, "r");
+		} else if (strcmp(key, "Data_main") == 0) {
+			(*filePointers).UFC_Data_main_file = fopen(value, "r");
 		}
 	}
 	
@@ -305,11 +307,13 @@ int main( int argc, char *argv[] )
     
     // matrices
     float * V; 
+	bool verbose = true;
 
     // ===========================
     // Allocate memory on the host
     // ===========================
-    
+	if(verbose) printf("Allocating memory on host\n");
+	
     // vectors
     UFC_Data_Q = (float *) malloc(572 * sizeof(float));
     UFC_Data_R = (float *) malloc(572 * sizeof(float));
@@ -339,7 +343,7 @@ int main( int argc, char *argv[] )
     // ========================
     // Declare Device Variables
     // ========================
-
+	if(verbose) printf("Declaring Device Variables\n");
     float* d_Q; 
     float* d_R; 
     float* d_V; 
@@ -370,7 +374,7 @@ int main( int argc, char *argv[] )
     // =============================
     // Allocate memory on the device
     // =============================
-	
+	if(verbose) printf("Allocating memory on the device\n");
     cudaMalloc((void **) &d_ln_Gamma_i, molecules * maxGroupNum * sizeof(float));
     cudaMalloc((void **) &d_thePsi_i, molecules * maxGroupNum * sizeof(float));
     cudaMalloc((void **) &d_theDiv_i, molecules * maxGroupNum * sizeof(float));
@@ -400,32 +404,32 @@ int main( int argc, char *argv[] )
     // ====================
     // read data from files
     // ====================
-
+	if(verbose) printf("Reading data from files\n");
 	
     // Read in the vector files first
     // UFC_Data_Q, UFC_Data_R, x, group_flag_array
-
+	if(verbose) printf("Reading Q and R\n");
     for(int i = 0; i < 572; i++) // possibly need 572 as a variable
     {
         fscanf(UFC_Data_Q_file, "%f ", &UFC_Data_Q[i]);
-	fscanf(UFC_Data_R_file, "%f ", &UFC_Data_R[i]);
-    }	
-	
+		fscanf(UFC_Data_R_file, "%f ", &UFC_Data_R[i]);
+    }
+	if(verbose) printf("Reading x\n");
     for(int i = 0; i < molecules; i++)
     {
         fscanf(x_file, "%f ", &x[i]);
     }
-	
+	if(verbose) printf("Reading Group Flag Array\n");
     for(int i = 0; i < maxGroupNum; i++)
     {
         fscanf(group_flag_array_file, "%i ", &group_flag_array[i]);
     }
-
+	if(verbose) printf("Reading UFC Data main\n");
     for(int i = 0; i < 572; i++)
     {
         fscanf(UFC_Data_main_file, "%i ", &UFC_Data_main[i]);
     }
-		
+	
     for(int i = 0; i < molecules; i++)
     {
         sum_v[i] = 0;
@@ -433,7 +437,7 @@ int main( int argc, char *argv[] )
         
     // And then the matrices (must be stored in column major form
     // for cublas!!)
-
+	if(verbose) printf("Reading in Data2\n");
     for(int i = 0; i < 76; i++)
     {
         for(int j = 0; j < 76; j++)
@@ -441,23 +445,32 @@ int main( int argc, char *argv[] )
             fscanf(UFC_Data2_file, "%f ", &UFC_Data2[i + j * 76]);
         }
     }
-    
+    if(verbose) printf("Reading v\n");
     for(int i = 0; i < molecules; i++)
     {
         for(int j = 0; j < maxGroupNum; j++)
-	{
+		{
             fscanf(v_file, "%f ", &V[i + j * molecules]);
-	}
+		}
     }
     
         
-    /*
-    // TO PRINT GROUP FLAGS
+    
+    // TO OUTPUT GROUP FLAGS
+	if(verbose) printf("Writing group flags\n");
+	if(verbose)
+	{
+		FILE *groupFile = fopen("cuda_validation_files\\group.csv", "w");
+		for(int j = 0; j < maxGroupNum; j++)
+			fprintf(groupFile, "%i ", group_flag_array[j]);
+		
+		fprintf(groupFile, "\n");
+		fclose(groupFile);
+	}
 
-    for(int j = 0; j < maxGroupNum; j++)
-        printf("%i ", group_flag_array[j]);
-    printf("\n");
-    */
+	if(verbose) printf("Finished writing group flags\n");
+
+    
         
     /*        
     // TO PRINT X
