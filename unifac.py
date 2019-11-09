@@ -55,7 +55,7 @@ def load_data(flag_file, stoich_file):
   group_flag_array.sort()
   return rows, cols, vals, group_flag_array
   
-def read_input_files():
+def read_input_files(file_name_flag, file_name_stoich):
   
   with open(file_name_flag, "r") as flag_file,\
        open(file_name_stoich, "r") as stoich_file:
@@ -64,37 +64,42 @@ def read_input_files():
        
   return n_rows, n_cols, rows, cols, vals, group_flag_array
 
-start = time.perf_counter()
-file_name_flag, file_name_stoich = read_and_validate_input_parameters()
+def read_parameter_files():
+	UFC_Data_Q = np.genfromtxt(os.path.join("model_parameters", "Q.txt"), dtype='float32')
+	UFC_Data_R = np.genfromtxt(os.path.join("model_parameters", "R.txt"), dtype='float32')
+	UFC_Data_main = np.genfromtxt('UFC_Data_main.txt', dtype = 'int') 
+	UFC_Data2 = np.genfromtxt('UFC_Data2.txt', dtype = 'float32')
+	return UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2
 
-n_rows, n_cols, rows, cols, vals, group_flag_array = read_input_files()
+def construct_v(cols, rows, vals, group_flag_array, molecules, maxGroupNum_int):
+	d = dict(zip(group_flag_array, range(len(group_flag_array))))
+	for i in range(len(cols)):
+		cols[i] = d[cols[i]]
 
-d = dict(zip(group_flag_array, range(len(group_flag_array))))
-for i in range(len(cols)):
-	cols[i] = d[cols[i]]
+	v = coo_matrix((vals, (rows, cols)), shape = (molecules, maxGroupNum_int))
+	v = v.toarray()	
+	return v
 
-molecules = n_rows
-maxGroupNum_int = len(group_flag_array)	
-T=298.15
-v = coo_matrix((vals, (rows, cols)), shape = (molecules, maxGroupNum_int))
-v = v.toarray()
-			
-x = np.ones(molecules) / molecules # 1/ molecules for each molecules
-UFC_Data_Q = np.genfromtxt(os.path.join("model_parameters", "Q.txt"), dtype='float32')
-UFC_Data_R = np.genfromtxt(os.path.join("model_parameters", "R.txt"), dtype='float32')
-UFC_Data_main = np.genfromtxt('UFC_Data_main.txt', dtype = 'int') 
-UFC_Data2 = np.genfromtxt('UFC_Data2.txt', dtype = 'float32')				
-end = time.perf_counter()	
-
-print('Reading files and pre unifac: ', (end - start) * 1000, ' ms')
+def load_files(file_name_flag, file_name_stoich):
+	start = time.perf_counter()
+	n_rows, n_cols, rows, cols, vals, group_flag_array = read_input_files(file_name_flag, file_name_stoich)
+	UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2 = read_parameter_files()
+	molecules = n_rows
+	end = time.perf_counter()
+	T=298.15
+	x = np.ones(molecules) / molecules # 1/ molecules for each molecules
+	maxGroupNum_int = len(group_flag_array)
+	v = construct_v(cols, rows, vals, group_flag_array, molecules, maxGroupNum_int)
+	print('Reading files and pre unifac: ', (end - start) * 1000, ' ms')
+	return molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2, group_flag_array, maxGroupNum_int, T
 
 def UNIFAC(molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, \
-           UFC_Data2, group_flag_array, maxGroupNum_int, T):
+           UFC_Data2, group_flag_array, maxGroupNum_int, T, validate = False):
 	
 	'''
 	The combinitorial
 	'''
-	
+
 	# Not all the UFC_Data is needed
 	# so reduct Q and R to only the values that are required.
 	
@@ -164,9 +169,16 @@ def UNIFAC(molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, \
 	gamma = np.exp(ln_gamma)
 	return(gamma)
 
-start = time.perf_counter()
-with np.errstate(divide = 'ignore', invalid = 'ignore'):
-    gamma = UNIFAC(molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2, group_flag_array, maxGroupNum_int, T)
-end = time.perf_counter()
-print('Running UNIFAC: ', (end-start) * 1000, 'ms')
-print(gamma)
+def main():
+	file_name_flag, file_name_stoich = read_and_validate_input_parameters()
+	molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2, group_flag_array, maxGroupNum_int, T = load_files(file_name_flag, file_name_stoich)
+	start = time.perf_counter()
+	with np.errstate(divide = 'ignore', invalid = 'ignore'):
+		gamma = UNIFAC(molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2, group_flag_array, maxGroupNum_int, T)
+	end = time.perf_counter()
+	print('Running UNIFAC: ', (end-start) * 1000, 'ms')
+	print(gamma)
+
+
+if __name__ == "__main__":
+	main()
