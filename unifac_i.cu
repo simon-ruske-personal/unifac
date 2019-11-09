@@ -717,24 +717,8 @@ int main()
 	
     // substitute d_thePsi and d_thePsi_t into Q ( 1.0 - log(d_thePsi_t) - d_thePsi_t) and store as d_formres
     formula<<<1024, 1024>>>(d_thePsi_i, d_thePsi_t_i, d_ln_Gamma_i, d_Q, maxGroupNum * molecules, molecules);
-    */
-        
-    // print d_ln_Gamma_i 
-    /*                
-    float* ln_Gamma_i = (float*) malloc(sizeof(float) * molecules * maxGroupNum);
-    cublasGetMatrix(molecules, maxGroupNum, sizeof(*ln_Gamma_i), d_ln_Gamma_i, molecules, ln_Gamma_i, molecules);
-    for(int i = 0; i < molecules; i++)
-    {
-        for(int j = 0; j < maxGroupNum; j++)
-        {
-            printf("%f ", ln_Gamma_i[i + j * molecules]);
-        }
-        printf("\n"); 
-    }
-    printf("\n");
-    */  
-
-	
+    
+       	
     // Find d_ln_Gamma_k
     	
     // Perform the matrix multiplication Theta * Psi and store in d_thePsi
@@ -748,14 +732,36 @@ int main()
 	
 	// substitute d_thePsi and d_thePsi_t into Q ( 1.0 - log(d_thePsi_t) - d_thePsi_t) and store as d_formres
     formula_k<<<1024, 1024>>>(d_thePsi, d_thePsi_t, d_ln_Gamma_k, d_Q, maxGroupNum);
+
+	// calculate the residual
+    matrixVectorRowSubtract<<<1024, 1024>>>(d_ln_Gamma_i, d_ln_Gamma_k, molecules, maxGroupNum);
+
+    // print d_ln_Gamma_i 
+    /*
+                
+    float* ln_Gamma_i = (float*) malloc(sizeof(float) * molecules * maxGroupNum);
+    cublasGetMatrix(molecules, maxGroupNum, sizeof(*ln_Gamma_i), d_ln_Gamma_i, molecules, ln_Gamma_i, molecules);
+    for(int i = 0; i < molecules; i++)
+    {
+        for(int j = 0; j < maxGroupNum; j++)
+        {
+            printf("%f ", ln_Gamma_i[i + j * molecules]);
+        }
+        printf("\n"); 
+    }
+    printf("\n");
+    */
+
+
+	//calculateResidual <<<1024, 1024 >>> (d_V, , d_ln_Gamma_i, d_ln_gamma_r, molecules, maxGroupNum);
     
-      // Print d_ln_Gamma
-      cudaThreadSynchronize();
-      float* ln_Gamma_k = (float*) malloc(sizeof(float) * maxGroupNum);
-      cublasGetVector(maxGroupNum, sizeof(*ln_Gamma_k), d_Q, 1, ln_Gamma_k, 1); 
-      for(int i = 0; i < maxGroupNum; i++)
-          printf("%f ", ln_Gamma_k[i]);
-      printf("\n");    
+    // Print d_ln_Gamma
+    cudaThreadSynchronize();
+    float* ln_Gamma_k = (float*) malloc(sizeof(float) * maxGroupNum);
+    cublasGetVector(maxGroupNum, sizeof(*ln_Gamma_k), d_ln_Gamma_k, 1, ln_Gamma_k, 1); 
+    for(int i = 0; i < maxGroupNum; i++)
+        printf("%f ", ln_Gamma_k[i]);
+    printf("\n");    
 
     Check_CUDA_Error("");
      //stop the timer----------------------------------------------
