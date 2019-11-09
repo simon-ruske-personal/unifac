@@ -1,0 +1,6 @@
+Q : model_parameters/Q.txt
+R : model_parameters/R.txt
+Data2 : model_parameters/UFC_Data2.txt
+Data_main : model_parameters/UFC_Data_main.txt
+maxGroupNum : 23
+molecules : 183

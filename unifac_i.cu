@@ -65,6 +65,21 @@ void Check_CUDA_Error(const char *message)
    }
 }
 
+// ======
+// STUCTS
+// ======
+
+typedef struct 
+{
+	FILE* UFC_Data_Q_file;
+	FILE* UFC_Data_R_file;
+	FILE* UFC_Data2_file;
+	FILE* UFC_Data_main_file;
+	FILE* group_flag_array_file;
+	FILE* v_file;
+	FILE* x_file;
+} FilePointers;
+
 //===========================
 //ADDITIONAL KERNEL FUNCTIONS
 //===========================
@@ -184,8 +199,53 @@ __global__ void formula_k(float *a, float *b, float *c, float *q, int n)
     }
 }
 
-int main()
+bool CorrectNumberOfArguments(int argc)
 {
+	if (argc == 2)
+	{
+		return true;
+	}
+	else
+	{
+		printf("Program recieved %d arguments. A single argument for a .cfg file is expected", argc - 1);
+		return false;
+	}
+}
+
+bool ArgumentsOkay(int argc, char* argv[])
+{
+	if (CorrectNumberOfArguments(argc) == false) return false;
+	return true;
+}
+
+void LoadFilePointers(char* configFilename, FilePointers* filePointers)
+{
+	FILE* configurationFile = fopen(configFilename, "r");
+    char key[100], value[100];
+	
+	while (fscanf(configurationFile, "%s : %s\n", key, value) != EOF)
+	{
+		if (key == NULL)
+		{
+			printf("Null key");
+		}
+		printf("Key: %s, Value: %s\n", key, value);
+		if (strcmp(key, "Q") == 0) {
+			(*filePointers).UFC_Data_Q_file = fopen(value, "r");
+		} else if (strcmp(key, "R") == 0) {
+			(*filePointers).UFC_Data_R_file = fopen(value, "r");
+		} else if (strcmp(key, "Data2") == 0) {
+			(*filePointers).UFC_Data2_file = fopen(value, "r");
+		}
+	}
+	
+	fclose(configurationFile);
+}
+
+int main( int argc, char *argv[] )
+{
+	if (ArgumentsOkay(argc, argv) == false) return 3;
+
     // ===============
     // set CUDA device
     // ===============
@@ -209,9 +269,12 @@ int main()
     float T = 298.149994;
     	
     // files
-    FILE *UFC_Data_Q_file = fopen("Q.txt", "r");
-    FILE *UFC_Data_R_file = fopen("R.txt", "r");
-    FILE *UFC_Data2_file = fopen("UFC_Data2.txt", "r");
+	FilePointers filePointers;
+	LoadFilePointers(argv[1], &filePointers);
+
+    FILE *UFC_Data_Q_file = filePointers.UFC_Data_Q_file;
+    FILE *UFC_Data_R_file = filePointers.UFC_Data_R_file;
+    FILE *UFC_Data2_file = filePointers.UFC_Data2_file;
     FILE *UFC_Data_main_file = fopen("UFC_Data_main.txt", "r");
     FILE *group_flag_array_file = fopen("group_flag_array.txt", "r");
     FILE *v_file = fopen("v.txt", "r"); 
