@@ -42,4 +42,4 @@ After the source has been compiled run
 
 TODO
 * Finish adding the lines of code to read filenames for v and x from the config file
-* Need to add a Python script to produce x and v from the input files without having to execute the Python UNIFAC function, so they can be passed through into 
+* Need to add a Python script to produce x and v from the input files without having to execute the Python UNIFAC function, so they can be passed through into the CUDA version.
