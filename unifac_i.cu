@@ -285,7 +285,8 @@ int main()
     float *d_psi_x;
     float *d_q_psi_x;
     float *d_theta_psi;
-    float* d_ln_gamma_c; 
+    float* d_ln_gamma_c;
+	float* d_ln_gamma_r;
     float *d_Theta;
     float *d_Theta_i;
     float *d_Theta_i_u;
@@ -324,7 +325,7 @@ int main()
     cudaMalloc((void**) &d_q_psi_x, molecules *sizeof(float));
     cudaMalloc((void**) &d_theta_psi, molecules * sizeof(float));
     cudaMalloc((void**) &d_ln_gamma_c, molecules * sizeof(float));
-    
+	cudaMalloc((void**) &d_ln_gamma_r, molecules * sizeof(float));
     cudaMalloc((void**) &d_Theta, maxGroupNum * sizeof(float));
     cudaMalloc((void**) &d_Theta_i, maxGroupNum * molecules * sizeof(float));
     cudaMalloc((void**) &d_sum, molecules * sizeof(float));
