@@ -275,18 +275,20 @@ int main( int argc, char *argv[] )
     FILE *UFC_Data_Q_file = filePointers.UFC_Data_Q_file;
     FILE *UFC_Data_R_file = filePointers.UFC_Data_R_file;
     FILE *UFC_Data2_file = filePointers.UFC_Data2_file;
-    FILE *UFC_Data_main_file = fopen("UFC_Data_main.txt", "r");
+    FILE *UFC_Data_main_file = filePointers.UFC_Data_main_file;
     FILE *group_flag_array_file = fopen("group_flag_array.txt", "r");
     FILE *v_file = fopen("v.txt", "r"); 
     FILE *x_file = fopen("x.txt", "r");
 
     // check reading of files
-    if(UFC_Data_Q_file == NULL) perror("Error Opening UFC_Data_Q");
-    if(UFC_Data_R_file == NULL) perror("Error Opening UFC_Data_R");
-    if(group_flag_array_file == NULL) perror("Error Opening Group flags");
-    if(v_file == NULL) perror("Error opening v");
-    if(x_file == NULL) perror("Error opening x");
-    if(UFC_Data2_file == NULL) perror("Error opening Data2");        
+	if(UFC_Data_Q_file == NULL) { perror("Error Opening UFC_Data_Q"); return 0;}
+    if(UFC_Data_R_file == NULL) { perror("Error Opening UFC_Data_R"); return 0;}
+    if(group_flag_array_file == NULL) { perror("Error Opening Group flags"); return 0;}
+    if(v_file == NULL) { perror("Error opening v"); return 0; }
+    if(x_file == NULL) { perror("Error opening x"); return 0; }
+    if(UFC_Data2_file == NULL) { perror("Error opening Data2"); return 0; }
+	if(UFC_Data_main_file == NULL) { perror("Error opening Main data"); return 0; }
+	   
 	
     // vectors 
     float * UFC_Data_Q;
