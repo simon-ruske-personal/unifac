@@ -508,27 +508,40 @@ int main( int argc, char *argv[] )
 
     
         
-    /*        
-    // TO PRINT X
-    printf("Printing x: \n");
-    for(int i = 0; i < molecules; i++)
-        printf("%f ", x[i]);
-    printf("\n");
-    */
+           
+    // TO WRITE X
+	if(verbose)
+	{
+		printf("Writing x\n");
+		char filename[200];
+		sprintf(filename, "%s\\x.txt", directory);
+		FILE *xFile = fopen(filename, "w");
+		for(int i = 0; i < molecules; i++)
+			fprintf(xFile, "%f ", x[i]);
+		fprintf(xFile, "\n");
+		printf("Finished writing x\n");
+		fclose(xFile);
+	}
+   
+    // TO WRITE X
+    if(verbose)
+	{
+		char filename[200];
+		sprintf(filename, "%s\\v.txt", directory);
+		FILE *vFile = fopen(filename, "w");
+		for(int i = 0; i < molecules; i++)
+		{
+			for(int j = 0; j < maxGroupNum; j++)
+			{
+				fprintf(vFile, "%f ", V[i + j * molecules]);
+			}
+			fprintf(vFile, "\n");
+		}
+		fprintf(vFile, "\n");
+		fclose(vFile);
+	}
 
-    /*       
-    // TO PRINT V
     
-    for(int i = 0; i < molecules; i++)
-    {
-        for(int j = 0; j < maxGroupNum; j++)
-        {
-            printf("%f ", V[i + j * molecules]);
-        }
-        printf("\n");
-    }
-    printf("\n");
-    */
 
 		
     // =============================
@@ -571,17 +584,23 @@ int main( int argc, char *argv[] )
     cublasGetVector(maxGroupNum, sizeof(*Q), d_Q, 1, Q, 1);
     cublasGetVector(maxGroupNum, sizeof(*R), d_R, 1, R, 1);
         
-    /*    
-    // print Q and R
-    printf("Printing Q : \n");
-    for(int j = 0; j < maxGroupNum; j++)
-        printf("%f ", Q[j]);
-    printf("\n");
-    printf("Printing R : \n");
-    for(int j = 0; j < maxGroupNum; j++)
-        printf("%f ", R[j]);
-    printf("\n");
-    */
+    if(verbose)
+	{
+		char filename[200];
+		sprintf(filename, "%s\\Q.txt", directory);
+		FILE *QFile = fopen(filename, "w");
+		for(int j = 0; j < maxGroupNum; j++)
+			fprintf(QFile, "%f ", Q[j]);
+		fprintf(QFile, "\n");
+		fclose(QFile);
+
+		sprintf(filename, "%s\\R.txt", directory);
+		FILE *RFile = fopen(filename, "w");
+		for(int j = 0; j < maxGroupNum; j++)
+			fprintf(RFile, "%f ", R[j]);
+		fprintf(RFile, "\n");
+		fclose(RFile);
+	}
      
     // Step 1.2  q = VQ and r = VR  
     //--------------------------------
@@ -596,25 +615,30 @@ int main( int argc, char *argv[] )
     cublasSgemv(handle, CUBLAS_OP_N, molecules, maxGroupNum, &al, d_V, molecules, d_Q, 1, &bet, d_q, 1);
     cublasSgemv(handle, CUBLAS_OP_N, molecules, maxGroupNum, &al, d_V, molecules, d_R, 1, &bet, d_r, 1);
          
-
-    /*
     // Return result to host
     cublasGetVector(molecules, sizeof(*q), d_q, 1, q, 1);
     cublasGetVector(molecules, sizeof(*r), d_r, 1, r, 1);
 
-    // Print 
-    printf("Printing q: \n");
-    for(int i = 0; i < molecules; i++)
-        printf("%f ", q[i]);
-    printf("\n");
+    // save
+	if (verbose)
+	{
+		char filename[200];
+		sprintf(filename, "%s\\qdot.txt", directory);
+		FILE *qdotFile = fopen(filename, "w");
 
-    printf("Printing r: \n");
-    for(int i = 0; i < molecules; i++)
-        printf("%f ", r[i]); 
-    printf("\n");
-    */
+		for(int i = 0; i < molecules; i++)
+			fprintf(qdotFile, "%f ", q[i]);
+		fprintf(qdotFile, "\n");
+		fclose(qdotFile);
+
+		sprintf(filename, "%s\\rdot.txt", directory);
+		FILE *rdotFile = fopen(filename, "w");
+		for(int i = 0; i < molecules; i++)
+			fprintf(rdotFile, "%f ", r[i]); 
+		fprintf(rdotFile, "\n");
+	}
+
           
-
     // Step 1.3 : Calculate l
     // ----------------------
     // Responsible for 0.2% of CPU code
@@ -622,17 +646,23 @@ int main( int argc, char *argv[] )
     calc_l_GPU<<<1024, 1024>>>(d_r, d_q, d_l, z, molecules);
 
 
-    /*        
-    // print l
-    cudaThreadSynchronize();
-    float* l; 
-    l = (float*) malloc(molecules * sizeof(float));
-    cudaMemcpy(l, d_l, sizeof(float) * molecules, cudaMemcpyDeviceToHost); 
-    for(int i = 0; i < molecules; i++)
-        printf("%f ", l[i]);
-    printf("\n");
-    */    
-    
+            
+    // save l
+
+	if (verbose)
+	{
+		char filename[200];
+		sprintf(filename, "%s\\L.txt", directory);
+		FILE *LFile = fopen(filename, "w");
+		cudaThreadSynchronize();
+		float* l; 
+		l = (float*) malloc(molecules * sizeof(float));
+		cudaMemcpy(l, d_l, sizeof(float) * molecules, cudaMemcpyDeviceToHost); 
+		for(int i = 0; i < molecules; i++)
+			fprintf(LFile, "%f ", l[i]);
+		fprintf(LFile, "\n");
+		fclose(LFile);
+	}
 
     // Step 1.4 : calculate dot products
     // ---------------------------------
@@ -648,11 +678,18 @@ int main( int argc, char *argv[] )
 
         
     // print results
-    /* 
-    printf("xdotr : %f\n", xdotr); 
-    printf("xdotq : %f\n", xdotq);
-    printf("xdotl : %f\n", xdotl);
-    */       
+	if (verbose)
+	{
+		char filename[200];
+		sprintf(filename, "%s\\dots.txt", directory);
+		FILE *dotsFile = fopen(filename, "w");
+		fprintf(dotsFile, "xdotr : %f\n", xdotr); 
+		fprintf(dotsFile, "xdotq : %f\n", xdotq);
+		fprintf(dotsFile, "xdotl : %f\n", xdotl);
+		fclose(dotsFile);
+	}
+
+     
            
     // Step 1.5 : calculate theta/x
     // ----------------------------
@@ -667,58 +704,56 @@ int main( int argc, char *argv[] )
     divideGPU<<<1024, 1024>>>(d_q, d_psi_x, d_q_psi_x, molecules);
     divideGPU_scalar<<<1024, 1024>>>(d_q_psi_x, d_theta_psi, xdotq, molecules);
         
-
-    /*    
+   
     // print d_theta_psi and psi_x
+	if (verbose)
+	{
+		float* psi_x;
+		float *theta_psi;
+		theta_psi = (float*) malloc(sizeof(float) * molecules);
+		psi_x = (float*) malloc(sizeof(float) * molecules); 
+		cudaMemcpy(theta_psi, d_theta_psi, sizeof(float)* molecules, cudaMemcpyDeviceToHost); 
+		cudaMemcpy(psi_x, d_psi_x, sizeof(float) * molecules, cudaMemcpyDeviceToHost);
+		
+		// save
+		char filename[200];
+		sprintf(filename, "%s\\the_psi.txt", directory);
+		FILE *thePsiFile = fopen(filename, "w");
+        
+		for(int i = 0; i < molecules; i++)
+			fprintf(thePsiFile, "%f ", theta_psi[i]);
+		fprintf(thePsiFile, "\n"); 
+		fclose(thePsiFile);
 
-    // copy to host
-    float* theta_psi; 
-    float* psi_x;
-    theta_psi = (float*) malloc(sizeof(float) * molecules);
-    psi_x = (float*) malloc(sizeof(float) * molecules); 
-    cudaMemcpy(theta_psi, d_theta_psi, sizeof(float)* molecules, cudaMemcpyDeviceToHost); 
-    cudaMemcpy(psi_x, d_psi_x, sizeof(float) * molecules, cudaMemcpyDeviceToHost);
-        
-        
-    // print 
-        
-    printf("Printing theta_psi: \n");
-    for(int i = 0; i < molecules; i++)
-        printf("%f ", theta_psi[i]);
-    printf("\n"); 
-
-    printf("Printing psi_x: \n"); 
-    for(int i = 0; i < molecules; i++)
-        printf("%f ", psi_x[i]);
-    printf("\n");	
-    */
-         
-        
+		sprintf(filename, "%s\\psi_x.txt", directory);
+		FILE *thePsiXFile = fopen(filename, "w");
+		for(int i = 0; i < molecules; i++)
+			fprintf(thePsiXFile, "%f ", psi_x[i]);
+		fprintf(thePsiXFile, "\n");	
+		fclose(thePsiFile);
+	}
+     
     // Part 1.7 : Calculate ln_gamma_c
     // -------------------------------
     // 3.4% of time on CPU
 
-
-
-    combinitorial_GPU<<<1024, 1024>>>(d_psi_x, d_q, d_theta_psi, d_l, z,\
-                                           xdotl, molecules, d_ln_gamma_c);
+    combinitorial_GPU<<<1024, 1024>>>(d_psi_x, d_q, d_theta_psi, d_l, z, xdotl, molecules, d_ln_gamma_c);
 										   
-
-    /*
     // print ln_gamma_c
+	if (verbose)
+	{
+		char filename[200];
+		sprintf(filename, "%s\\ln_gamma_c.txt", directory);
+		FILE *lnGammaCFile = fopen(filename, "w");
+		float* ln_gamma_c; 
+		ln_gamma_c = (float*) malloc(sizeof(float) * molecules);
+		cudaMemcpy(ln_gamma_c, d_ln_gamma_c, sizeof(float)* molecules, cudaMemcpyDeviceToHost);
+		for(int i = 0; i < molecules; i++)
+			fprintf(lnGammaCFile, "%f ", ln_gamma_c[i]);
+		fprintf(lnGammaCFile, "\n"); 
+	}		
 
-    		
-    float* ln_gamma_c; 
-    ln_gamma_c = (float*) malloc(sizeof(float) * molecules);
-    cudaMemcpy(ln_gamma_c, d_ln_gamma_c, sizeof(float)* molecules, cudaMemcpyDeviceToHost);
-    printf("Printing ln_gamma_c");
-    for(int i = 0; i < molecules; i++)
-        printf("%f ", ln_gamma_c[i]);
-    printf("\n"); 
-     
-    */
-    
-
+   
     /// Step 2.1 Calculate Theta 
 
 	float* d_xv;
