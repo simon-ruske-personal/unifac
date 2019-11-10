@@ -2,8 +2,8 @@ import os, sys, time
 import numpy as np
 from scipy.sparse import coo_matrix
 
-def correct_number_of_paremeters():
-  if len(sys.argv) != 3:
+def correct_number_of_paremeters(argv, expected_number = 3):
+  if len(argv) != expected_number:
     raise ValueError("Two files should be specified including a "
                      "flag file and stoich file.")
  
@@ -21,8 +21,8 @@ def both_files_exist(file_name_flag, file_name_stoich):
     
   raise_input_errors(errors)
                      
-def read_and_validate_input_parameters():
-  correct_number_of_paremeters()
+def read_and_validate_input_parameters(argv):
+  correct_number_of_paremeters(argv)
   file_name_flag, file_name_stoich = sys.argv[1], sys.argv[2]
   both_files_exist(file_name_flag, file_name_stoich)
   return file_name_flag, file_name_stoich
@@ -183,7 +183,7 @@ def UNIFAC(molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, \
 	return(gamma)
 
 def main():
-	file_name_flag, file_name_stoich = read_and_validate_input_parameters()
+	file_name_flag, file_name_stoich = read_and_validate_input_parameters(sys.argv)
 	molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, UFC_Data2, group_flag_array, maxGroupNum_int, T = load_files(file_name_flag, file_name_stoich)
 	start = time.perf_counter()
 	with np.errstate(divide = 'ignore', invalid = 'ignore'):
