@@ -30,7 +30,10 @@ Run the following from the Native Tools Command Prompt
 ```
 
 #### Executing
-At the moment, the implementation expects, v.txt and x.txt to be present in the current directory.
+The following parameters need to be set in the config.txt file which are passed to unifac_i.txt
+* Q, R - filenames for surface area and volume contributions taken from the literature
+* Data2, Data_main - filenames for the interaction arameters and subgroup numbers, taken from the literature
+* x, v - filenames for x and v, the mole fraction (x) and the number of each group (v) for each component 
  
 After the source has been compiled run
 ```
@@ -38,5 +41,4 @@ After the source has been compiled run
 ```
 
 TODO
-* Finish adding the lines of code to read filenames for v and x from the config file
-* Need to add a Python script to produce x and v from the input files without having to execute the Python UNIFAC function, so they can be passed through into the CUDA version.
+* Need to add a Python script to produce x and v from the group_array_i.txt and group_stoich_i.txt test files without having to execute the entire Python UNIFAC function, so they can be passed through into the CUDA version.
