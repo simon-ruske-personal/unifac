@@ -137,7 +137,7 @@ def UNIFAC(molecules, x, v, UFC_Data_Q, UFC_Data_R, UFC_Data_main, \
 		np.savetxt(os.path.join("python_validation_files", "R_{}.csv".format(validate)), R, delimiter=',')
 		np.savetxt(os.path.join("python_validation_files", "qdot_{}.csv".format(validate)), q, delimiter=',')
 		np.savetxt(os.path.join("python_validation_files", "rdot_{}.csv".format(validate)), r, delimiter=',')
-		np.savetxt(os.path.join("python_validation_files", "dots_{}.csv".format(validate)), [xdotr, xdotq, xdotq], delimiter=',')
+		np.savetxt(os.path.join("python_validation_files", "dots_{}.csv".format(validate)), [xdotr, xdotq, xdotl], delimiter=',')
 		np.savetxt(os.path.join("python_validation_files", "psi_x_{}.csv".format(validate)), psi_x, delimiter=',')
 		np.savetxt(os.path.join("python_validation_files", "theta_psi_{}.csv".format(validate)), theta_psi, delimiter=',')
 		np.savetxt(os.path.join("python_validation_files", "L_{}.csv".format(validate)), L, delimiter=',')
