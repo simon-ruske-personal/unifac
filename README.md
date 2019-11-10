@@ -6,9 +6,6 @@ The following repository includes a Python and CUDA implementation of the UNIFAC
 
 ### Python implementation
 
-#### Prerequisites
-* I prefer using Anaconda to run the Python code
-
 #### Executing
 Pass in a group flag and group stoich file as arguments e.g.
 ```
