@@ -2,5 +2,8 @@ Q : model_parameters/Q.txt
 R : model_parameters/R.txt
 Data2 : model_parameters/UFC_Data2.txt
 Data_main : model_parameters/UFC_Data_main.txt
+Group_Flag : group_flag_array.txt
+v : v.txt
+x : x.txt
 maxGroupNum : 23
 molecules : 183

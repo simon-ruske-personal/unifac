@@ -232,12 +232,24 @@ void LoadFilePointers(char* configFilename, FilePointers* filePointers)
 		printf("Key: %s, Value: %s\n", key, value);
 		if (strcmp(key, "Q") == 0) {
 			(*filePointers).UFC_Data_Q_file = fopen(value, "r");
-		} else if (strcmp(key, "R") == 0) {
+		} 
+		else if (strcmp(key, "R") == 0) {
 			(*filePointers).UFC_Data_R_file = fopen(value, "r");
-		} else if (strcmp(key, "Data2") == 0) {
+		} 
+		else if (strcmp(key, "Data2") == 0) {
 			(*filePointers).UFC_Data2_file = fopen(value, "r");
-		} else if (strcmp(key, "Data_main") == 0) {
+		} 
+		else if (strcmp(key, "Data_main") == 0) {
 			(*filePointers).UFC_Data_main_file = fopen(value, "r");
+		}
+		else if (strcmp(key, "Group_Flag") == 0) {
+			(*filePointers).group_flag_array_file = fopen(value, "r");
+		}
+		else if (strcmp(key, "v") == 0) {
+			(*filePointers).v_file = fopen(value, "r");
+		}
+		else if (strcmp(key, "x") == 0) {
+			(*filePointers).x_file = fopen(value, "r");
 		}
 	}
 	
@@ -278,9 +290,9 @@ int main( int argc, char *argv[] )
     FILE *UFC_Data_R_file = filePointers.UFC_Data_R_file;
     FILE *UFC_Data2_file = filePointers.UFC_Data2_file;
     FILE *UFC_Data_main_file = filePointers.UFC_Data_main_file;
-    FILE *group_flag_array_file = fopen("group_flag_array.txt", "r");
-    FILE *v_file = fopen("v.txt", "r"); 
-    FILE *x_file = fopen("x.txt", "r");
+	FILE* group_flag_array_file = filePointers.group_flag_array_file;
+    FILE *v_file = filePointers.v_file; 
+    FILE *x_file = filePointers.x_file;
 
     // check reading of files
 	if(UFC_Data_Q_file == NULL) { perror("Error Opening UFC_Data_Q"); return 0;}
