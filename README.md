@@ -9,7 +9,7 @@ The following repository includes a Python and CUDA implementation of the UNIFAC
 #### Executing
 Pass in a group flag and group stoich file as arguments e.g.
 ```
-> python unifac.py test_files\group_flag_1.txt test_files\group_stoich_1.txt
+C
 ```
 
 ### CUDA version - In Progress
@@ -34,11 +34,16 @@ The following parameters need to be set in the config.txt file which are passed 
 * Q, R - filenames for surface area and volume contributions taken from the literature
 * Data2, Data_main - filenames for the interaction arameters and subgroup numbers, taken from the literature
 * x, v - filenames for x and v, the mole fraction (x) and the number of each group (v) for each component 
+* group_flag_array - filename that lists the groups which are used in v
+* maxGroupNum, molecules - dimensions of v
+
+To produce files for x, v, and the group_flag_array from a group_flag and group_stoich file you can run, for example:
+```
+> python unifac_reader.py test_files\group_flag_1.txt test_files\group_stoich_1.txt
+```
+which will read the files and produce x, v, and the group_flag_array, as is done in the python version, but without executing the model.
  
 After the source has been compiled run
 ```
 > unifac.exe config.txt
 ```
-
-TODO
-* Need to add a Python script to produce x and v from the group_array_i.txt and group_stoich_i.txt test files without having to execute the entire Python UNIFAC function, so they can be passed through into the CUDA version.
