@@ -220,7 +220,7 @@ bool ArgumentsOkay(int argc, char* argv[])
 	return true;
 }
 
-void LoadFilePointers(char* configFilename, FilePointers* filePointers)
+void LoadConfigFile(char* configFilename, FilePointers* filePointers, int *maxGroupNumber, int *molecules)
 {
 	FILE* configurationFile = fopen(configFilename, "r");
     char key[100], value[100];
@@ -253,6 +253,12 @@ void LoadFilePointers(char* configFilename, FilePointers* filePointers)
 		else if (strcmp(key, "x") == 0) {
 			(*filePointers).x_file = fopen(value, "r");
 		}
+		else if (strcmp(key, "molecules") == 0) {
+			sscanf(value, "%d", molecules);
+		}
+		else if (strcmp(key, "maxGroupNum") == 0) {
+			sscanf(value, "%d", maxGroupNumber);
+		}
 	}
 	
 	fclose(configurationFile);
@@ -279,14 +285,15 @@ int main( int argc, char *argv[] )
     float xdotq;
 	
     // scalar variables
-    int maxGroupNum = 23;
-    int molecules = 183;
+    int maxGroupNum;
+    int molecules;
     int z = 10; 
     float T = 298.149994;
     	
     // files
 	FilePointers filePointers;
-	LoadFilePointers(argv[1], &filePointers);
+
+	LoadConfigFile(argv[1], &filePointers, &maxGroupNum, &molecules);
 
     FILE *UFC_Data_Q_file = filePointers.UFC_Data_Q_file;
     FILE *UFC_Data_R_file = filePointers.UFC_Data_R_file;
@@ -305,6 +312,9 @@ int main( int argc, char *argv[] )
     if(UFC_Data2_file == NULL) { perror("Error opening Data2"); return 0; }
 	if(UFC_Data_main_file == NULL) { perror("Error opening Main data"); return 0; }
 	   
+	// check reading of maxGroupNum and molecules
+	if(maxGroupNum == NULL) { perror("The maxGroupNum could not be loaded from the config file"); return 0; }
+	if(molecules == NULL) { perror("The number of molecules could not be loaded from the config file"); return 0; };
 	
     // vectors 
     float * UFC_Data_Q;
