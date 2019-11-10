@@ -207,7 +207,7 @@ bool CorrectNumberOfArguments(int argc)
 	}
 	else
 	{
-		printf("Program recieved %d arguments. A single argument for a .cfg file is expected", argc - 1);
+		printf("Program recieved %d arguments. A single argument for a config.txt file is expected", argc - 1);
 		return false;
 	}
 }
