@@ -9,7 +9,7 @@ The following repository includes a Python and CUDA implementation of the UNIFAC
 #### Executing
 Pass in a group flag and group stoich file as arguments e.g.
 ```
-C
+> python unifac.py test_files\group_flag_1.txt test_files\group_stoich_1.txt
 ```
 
 ### CUDA version - In Progress
