@@ -6,9 +6,6 @@ The following repository includes a Python and CUDA implementation of the UNIFAC
 
 ### Python implementation
 
-#### Prerequisites
-* I prefer using Anaconda to run the Python code
-
 #### Executing
 Pass in a group flag and group stoich file as arguments e.g.
 ```
@@ -16,6 +13,9 @@ Pass in a group flag and group stoich file as arguments e.g.
 ```
 
 ### CUDA version - In Progress
+
+This is not quite finished. At present the code will output the combinitorial.
+TODO: Finish writing the residual functionality
 
 #### Prerequisites
 At the moment the implementation has been tested using the following:
@@ -30,11 +30,13 @@ Run the following from the Native Tools Command Prompt
 ```
 
 #### Executing
-At the moment, the implementation expects, Q.txt, R.txt, UFC_Data2.txt, UFC_Data_main.txt, v.txt and x.txt to be present in the current directory.
+At the moment, the implementation expects, v.txt and x.txt to be present in the current directory.
  
 After the source has been compiled run
 ```
-> unifac.exe
+> unifac.exe config.txt
 ```
 
-TODO: allow for arguments to be passed in for the file names similar to functionality in the Python implmenetation
+TODO
+* Finish adding the lines of code to read filenames for v and x from the config file
+* Need to add a Python script to produce x and v from the input files without having to execute the Python UNIFAC function, so they can be passed through into the CUDA version.
