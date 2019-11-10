@@ -44,13 +44,15 @@
 // ==================
 // INCLUDE STATEMENTS
 // ==================
-
 #include<stdio.h>
 #include<stdlib.h>
+#include<ctype.h>
+#include <direct.h>
 #include<math.h>
 #include<cuda_runtime.h>
 #include "cublas_v2.h"
 #include<cuda.h>
+#include<time.h>
 
 // =============================
 // ERROR check for kernel launch
@@ -469,10 +471,32 @@ int main( int argc, char *argv[] )
         
     
     // TO OUTPUT GROUP FLAGS
+	time_t curTime;
+	time(&curTime);
+	char directory[150];
+	int i = 0;
+	sprintf(directory, "cuda_validation_files\\%s", ctime(&curTime));
+	while(directory[i])
+	{
+		if(isspace(directory[i]) | directory[i] == ':')
+			directory[i] = '_';
+		i++;
+	}
+
+	
+	printf("%s\n", directory);
+	
+
+	_mkdir("cuda_validation_files");
+	_mkdir(directory);
+	
+	
 	if(verbose) printf("Writing group flags\n");
 	if(verbose)
 	{
-		FILE *groupFile = fopen("cuda_validation_files\\group.csv", "w");
+		char filename[200];
+		sprintf(filename, "%s\\group.txt", directory);
+		FILE *groupFile = fopen(filename, "w");
 		for(int j = 0; j < maxGroupNum; j++)
 			fprintf(groupFile, "%i ", group_flag_array[j]);
 		
