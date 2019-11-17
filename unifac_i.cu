@@ -485,7 +485,7 @@ int main( int argc, char *argv[] )
 	time(&curTime);
 	char directory[150];
 	int i = 0;
-	sprintf(directory, "cuda_validation_files\\%s", ctime(&curTime));
+	sprintf(directory, ".cuda_validation_files\\%s", ctime(&curTime));
 	while(directory[i])
 	{
 		if(isspace(directory[i]) | directory[i] == ':')
@@ -497,7 +497,7 @@ int main( int argc, char *argv[] )
 	printf("%s\n", directory);
 	
 
-	_mkdir("cuda_validation_files");
+	_mkdir(".cuda_validation_files");
 	_mkdir(directory);
 	
 	
@@ -516,9 +516,6 @@ int main( int argc, char *argv[] )
 
 	if(verbose) printf("Finished writing group flags\n");
 
-    
-        
-           
     // TO WRITE X
 	if(verbose)
 	{
@@ -527,13 +524,15 @@ int main( int argc, char *argv[] )
 		sprintf(filename, "%s\\x.txt", directory);
 		FILE *xFile = fopen(filename, "w");
 		for(int i = 0; i < molecules; i++)
-			fprintf(xFile, "%f ", x[i]);
+			fprintf(xFile, "%.20f ", x[i]);
 		fprintf(xFile, "\n");
 		printf("Finished writing x\n");
 		fclose(xFile);
 	}
+        
+
    
-    // TO WRITE X
+    // TO WRITE v
     if(verbose)
 	{
 		char filename[200];
@@ -543,7 +542,7 @@ int main( int argc, char *argv[] )
 		{
 			for(int j = 0; j < maxGroupNum; j++)
 			{
-				fprintf(vFile, "%f ", V[i + j * molecules]);
+				fprintf(vFile, "%.20f ", V[i + j * molecules]);
 			}
 			fprintf(vFile, "\n");
 		}
@@ -600,14 +599,14 @@ int main( int argc, char *argv[] )
 		sprintf(filename, "%s\\Q.txt", directory);
 		FILE *QFile = fopen(filename, "w");
 		for(int j = 0; j < maxGroupNum; j++)
-			fprintf(QFile, "%f ", Q[j]);
+			fprintf(QFile, "%.20f ", Q[j]);
 		fprintf(QFile, "\n");
 		fclose(QFile);
 
 		sprintf(filename, "%s\\R.txt", directory);
 		FILE *RFile = fopen(filename, "w");
 		for(int j = 0; j < maxGroupNum; j++)
-			fprintf(RFile, "%f ", R[j]);
+			fprintf(RFile, "%.20f ", R[j]);
 		fprintf(RFile, "\n");
 		fclose(RFile);
 	}
@@ -637,14 +636,14 @@ int main( int argc, char *argv[] )
 		FILE *qdotFile = fopen(filename, "w");
 
 		for(int i = 0; i < molecules; i++)
-			fprintf(qdotFile, "%f ", q[i]);
+			fprintf(qdotFile, "%.20f ", q[i]);
 		fprintf(qdotFile, "\n");
 		fclose(qdotFile);
 
 		sprintf(filename, "%s\\rdot.txt", directory);
 		FILE *rdotFile = fopen(filename, "w");
 		for(int i = 0; i < molecules; i++)
-			fprintf(rdotFile, "%f ", r[i]); 
+			fprintf(rdotFile, "%.20f ", r[i]); 
 		fprintf(rdotFile, "\n");
 	}
 
@@ -669,7 +668,7 @@ int main( int argc, char *argv[] )
 		l = (float*) malloc(molecules * sizeof(float));
 		cudaMemcpy(l, d_l, sizeof(float) * molecules, cudaMemcpyDeviceToHost); 
 		for(int i = 0; i < molecules; i++)
-			fprintf(LFile, "%f ", l[i]);
+			fprintf(LFile, "%.20f ", l[i]);
 		fprintf(LFile, "\n");
 		fclose(LFile);
 	}
@@ -693,11 +692,12 @@ int main( int argc, char *argv[] )
 		char filename[200];
 		sprintf(filename, "%s\\dots.txt", directory);
 		FILE *dotsFile = fopen(filename, "w");
-		fprintf(dotsFile, "xdotr : %f\n", xdotr); 
-		fprintf(dotsFile, "xdotq : %f\n", xdotq);
-		fprintf(dotsFile, "xdotl : %f\n", xdotl);
+		fprintf(dotsFile, "xdotr : %.20f\n", xdotr); 
+		fprintf(dotsFile, "xdotq : %.20f\n", xdotq);
+		fprintf(dotsFile, "xdotl : %.20f\n", xdotl);
 		fclose(dotsFile);
 	}
+           
 
      
            
@@ -731,14 +731,14 @@ int main( int argc, char *argv[] )
 		FILE *thePsiFile = fopen(filename, "w");
         
 		for(int i = 0; i < molecules; i++)
-			fprintf(thePsiFile, "%f ", theta_psi[i]);
+			fprintf(thePsiFile, "%.20f ", theta_psi[i]);
 		fprintf(thePsiFile, "\n"); 
 		fclose(thePsiFile);
 
 		sprintf(filename, "%s\\psi_x.txt", directory);
 		FILE *thePsiXFile = fopen(filename, "w");
 		for(int i = 0; i < molecules; i++)
-			fprintf(thePsiXFile, "%f ", psi_x[i]);
+			fprintf(thePsiXFile, "%.20f ", psi_x[i]);
 		fprintf(thePsiXFile, "\n");	
 		fclose(thePsiFile);
 	}
@@ -759,7 +759,7 @@ int main( int argc, char *argv[] )
 		ln_gamma_c = (float*) malloc(sizeof(float) * molecules);
 		cudaMemcpy(ln_gamma_c, d_ln_gamma_c, sizeof(float)* molecules, cudaMemcpyDeviceToHost);
 		for(int i = 0; i < molecules; i++)
-			fprintf(lnGammaCFile, "%f ", ln_gamma_c[i]);
+			fprintf(lnGammaCFile, "%.20f ", ln_gamma_c[i]);
 		fprintf(lnGammaCFile, "\n"); 
 	}		
 
