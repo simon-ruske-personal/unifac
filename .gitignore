@@ -1,6 +1,10 @@
-python_validation_files/
-cuda_validation_files/
+.python_validation_files/
+.cuda_validation_files/
 .vs/
+validation_report.txt
+group_flag_array.txt
+x.txt
+v.txt
 
 *.exe
 *.exp
