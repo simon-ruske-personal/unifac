@@ -1,0 +1,17 @@
+[project]
+name = "unifac"
+version = "0.1.0"
+description = "Python package for running UNIFAC model"
+readme = "README.md"
+authors = [
+    { name = "simonruske" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.2.6",
+    "scipy>=1.15.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

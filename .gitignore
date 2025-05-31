@@ -1,6 +1,7 @@
 .python_validation_files/
 .cuda_validation_files/
 .vs/
+.vscode/
 validation_report.txt
 group_flag_array.txt
 x.txt
