@@ -19,10 +19,6 @@ jobs:
         working-directory: ./src
       - run: nvcc unifac_i.cu -o unifac-model -l cublas
         working-directory: ./src
-      - run: |
-          uv run ./utils/create_config.py
-          ls
-        working-directory: ./src
       - uses: actions/upload-artifact@v4
         with:
             name: unifac-executable
@@ -31,9 +27,16 @@ jobs:
     runs-on:
       group: unifac-runners
     steps:
+    - uses: actions/checkout@v3
     - uses: actions/download-artifact@v4
       with:
         name: unifac-executable
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+    - run: |
+        uv run ./utils/create_config.py
+        ls
+      working-directory: ./src
     - run: |
         ls
     - run: |
