@@ -15,6 +15,7 @@ jobs:
             name: unifac-executable
             path: unifac
   execute:
+    needs: compile
     runs-on:
       group: unifac-runners 
     steps:
