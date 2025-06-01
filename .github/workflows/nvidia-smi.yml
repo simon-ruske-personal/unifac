@@ -26,6 +26,8 @@ jobs:
   run_cuda:
     runs-on:
       group: unifac-runners
+    container:
+      image: nvcr.io/nvidia/cuda:12.4.0-devel-ubuntu22.04
     steps:
     - uses: actions/checkout@v3
     - uses: actions/download-artifact@v4
@@ -33,6 +35,8 @@ jobs:
         name: unifac-executable
     - name: Install uv
       uses: astral-sh/setup-uv@v5
+    - run: |
+        nvidia-smi
     - run: |
         uv run ./utils/create_config.py
         ls
@@ -47,5 +51,6 @@ jobs:
         chmod u+x unifac-model
         ./unifac-model config.txt
       working-directory: ./src
+    
     needs: run_python_tests
 
