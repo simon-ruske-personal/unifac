@@ -17,11 +17,11 @@ jobs:
       - name: Run Tests
         run: uv run pytest
         working-directory: ./src
-      - run: nvcc unifac_i.cu -o unifac -l cublas
+      - run: nvcc unifac_i.cu -o unifac-model -l cublas
         working-directory: ./src
       - run: |
           uv run ./utils/create_config.py
-          ./unifac config.txt
+          ./unifac-model config.txt
         working-directory: ./src
 
   # compile:
