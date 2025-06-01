@@ -1,5 +1,4 @@
-name: Run Nvidia-SMI
-
+name: Run CUDA Code 
 on:
     workflow_dispatch
 
@@ -8,6 +7,7 @@ jobs:
         runs-on:
             group: unifac-runners
         steps:
-        - name: Run nvidia smi
+        - uses: actions/checkout@v3
+        - name: Compile CUDA code
           run: |
-            nvidia-smi
+            nvcc unifac_i.cu -o unifac -l cublas
