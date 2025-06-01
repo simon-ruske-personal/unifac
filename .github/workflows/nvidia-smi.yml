@@ -5,7 +5,7 @@ on:
 jobs:
   run_python_tests:
     runs-on:
-      group: unifac-runners
+      group: ubuntu:latest
     container:
       image: nvcr.io/nvidia/cuda:12.4.0-devel-ubuntu22.04
     steps:
@@ -24,7 +24,20 @@ jobs:
           uv run ./utils/create_config.py
           ls
         working-directory: ./src
-      - run: |
-          ./unifac-model config.txt
-        working-directory: ./src
+      - uses: actions/upload-artifact@v4
+        with:
+            name: unifac-executable
+            path: unifac-model
+  run_cuda:
+    runs-on:
+      group: unifac-runners
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: unifac-executable
+        path: ./src/unifac-model
+
+    - run: |
+        ./unifac-model config.txt
+      working-directory: ./src
 
