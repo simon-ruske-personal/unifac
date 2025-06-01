@@ -662,7 +662,7 @@ int main( int argc, char *argv[] )
 		char filename[200];
 		sprintf(filename, "%s\\L.txt", directory);
 		FILE *LFile = fopen(filename, "w");
-		cudaThreadSynchronize();
+		cudaDeviceSynchronize();
 		float* l; 
 		l = (float*) malloc(molecules * sizeof(float));
 		cudaMemcpy(l, d_l, sizeof(float) * molecules, cudaMemcpyDeviceToHost); 
@@ -793,7 +793,7 @@ int main( int argc, char *argv[] )
     /*        
     // print d_Theta
  
-    cudaThreadSynchronize();
+    cudaDeviceSynchronize();
     cublasGetVector(maxGroupNum, sizeof(*Theta), d_Theta, 1, Theta, 1);
         
 
@@ -822,7 +822,7 @@ int main( int argc, char *argv[] )
     // print d_Theta_i
 
 
-    cudaThreadSynchronize();
+    cudaDeviceSynchronize();
     float* Theta_i = (float*) malloc(sizeof(float) * molecules * maxGroupNum);
     cublasGetMatrix(molecules, maxGroupNum, sizeof(*Theta_i), d_Theta_i_u,molecules, Theta_i, molecules);
     for(int i = 0; i < molecules; i++)
@@ -914,7 +914,7 @@ int main( int argc, char *argv[] )
 	//calculateResidual <<<1024, 1024 >>> (d_V, , d_ln_Gamma_i, d_ln_gamma_r, molecules, maxGroupNum);
     
     // Print d_ln_Gamma
-    cudaThreadSynchronize();
+    cudaDeviceSynchronize();
     float* ln_Gamma_k = (float*) malloc(sizeof(float) * maxGroupNum);
     cublasGetVector(maxGroupNum, sizeof(*ln_Gamma_k), d_ln_gamma_c, 1, ln_Gamma_k, 1); 
     for(int i = 0; i < maxGroupNum; i++)
@@ -923,7 +923,7 @@ int main( int argc, char *argv[] )
 
     Check_CUDA_Error("");
      //stop the timer----------------------------------------------
-    cudaThreadSynchronize();
+    cudaDeviceSynchronize();
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
     float elapsedTimeGPU;
