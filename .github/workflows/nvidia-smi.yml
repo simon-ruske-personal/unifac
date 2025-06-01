@@ -26,13 +26,16 @@ jobs:
   run_cuda:
     runs-on:
       group: unifac-runners
-    container:
-      image: nvcr.io/nvidia/cuda:12.4.0-devel-ubuntu22.04
     steps:
     - uses: actions/checkout@v3
     - uses: actions/download-artifact@v4
       with:
         name: unifac-executable
+    
+    - uses: Jimver/cuda-toolkit@v0.2.23
+      id: cuda-toolkit
+      with:
+        cuda: '12.4.0'
     - name: Install uv
       uses: astral-sh/setup-uv@v5
     - run: |
