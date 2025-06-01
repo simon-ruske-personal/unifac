@@ -3,28 +3,38 @@ on:
     workflow_dispatch
 
 jobs:
-  compile:
-      runs-on: ubuntu-latest
-      container:
-        image: nvcr.io/nvidia/cuda:12.0.1-devel-ubuntu22.04
-      steps:
-      - uses: actions/checkout@v3
-      - run: nvcc unifac_i.cu -o unifac -l cublas
-      - uses: actions/upload-artifact@v4
-        with:
-            name: unifac-executable
-            path: unifac
-  execute:
-    needs: compile
-    runs-on:
-      group: unifac-runners
-    container:
-        image: nvcr.io/nvidia/cuda:12.0.1-devel-ubuntu22.04
+  run_tests:
+    runs-on: ubuntu-latest
     steps:
-    - name: Download executable
-      uses: actions/download-artifact@v4
-      with:
-        name: unifac-executable
-    - run: | 
-        chmod u+x unifac
-        ./unifac
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Install Python package
+        run: uv python install
+      - name: Run Tests
+        run: uv run pytest
+
+  # compile:
+  #     runs-on: ubuntu-latest
+  #     container:
+  #       image: nvcr.io/nvidia/cuda:12.0.1-devel-ubuntu22.04
+  #     steps:
+  #     - uses: actions/checkout@v3
+  #     - run: nvcc unifac_i.cu -o unifac -l cublas
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #           name: unifac-executable
+  #           path: unifac
+  # execute:
+  #   needs: compile
+  #   runs-on:
+  #     group: unifac-runners
+  #   container:
+  #       image: nvcr.io/nvidia/cuda:12.0.1-devel-ubuntu22.04
+  #   steps:
+  #   - name: Download executable
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: unifac-executable
+  #   - run: | 
+  #       chmod u+x unifac
+  #       ./unifac
