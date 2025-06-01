@@ -4,8 +4,7 @@ on:
 
 jobs:
   run_python_tests:
-    runs-on:
-      group: ubuntu:latest
+    runs-on: ubuntu-latest
     container:
       image: nvcr.io/nvidia/cuda:12.4.0-devel-ubuntu22.04
     steps:
