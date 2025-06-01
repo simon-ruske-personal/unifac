@@ -34,8 +34,10 @@ jobs:
     - uses: actions/download-artifact@v4
       with:
         name: unifac-executable
-        path: ./src/unifac-model
-
+    - run: |
+        ls
+        cp unifac-model ./src/unifac-model
+        ls ./src
     - run: |
         ./unifac-model config.txt
       working-directory: ./src
