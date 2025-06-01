@@ -36,7 +36,9 @@ jobs:
         name: unifac-executable
     - run: |
         ls
+    - run: |
         cp unifac-model ./src/unifac-model
+    - run: |
         ls ./src
     - run: |
         ./unifac-model config.txt
