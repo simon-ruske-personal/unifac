@@ -40,4 +40,5 @@ jobs:
     - run: |
         ./unifac-model config.txt
       working-directory: ./src
+    needs: run_python_tests
 
