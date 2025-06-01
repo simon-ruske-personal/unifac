@@ -44,7 +44,7 @@ jobs:
     - run: |
         ls ./src
     - run: |
-        chmod u+x unifac-modelC
+        chmod u+x unifac-model
         ./unifac-model config.txt
       working-directory: ./src
     needs: run_python_tests
