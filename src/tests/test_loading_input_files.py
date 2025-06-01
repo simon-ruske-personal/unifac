@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import numpy as np
 import pytest
-from .conftest import load_files
+from src.utils.load_test_files import load_files
 
 @pytest.mark.parametrize(
     "group_filename, stoich_filename, expected_molecules, expected_groups, v_checksum, group_checksum",
