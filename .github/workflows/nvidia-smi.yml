@@ -21,23 +21,9 @@ jobs:
         working-directory: ./src
       - run: |
           uv run ./utils/create_config.py
+          ls
+        working-directory: ./src
+      - run: |
           ./unifac-model config.txt
         working-directory: ./src
-
-  # compile:
-
-  #     steps:
-  #     - uses: actions/checkout@v3
-
-  # execute:
-  #   needs: compile
-  #   runs-on:
-  #     group: unifac-runners
-  #   container:
-  #       image: nvcr.io/nvidia/cuda:12.0.1-devel-ubuntu22.04
-  #   steps:
-  #   - name: Download executable
-  #     uses: actions/download-artifact@v4
-  #     with:
-  #       name: unifac-executable
 
