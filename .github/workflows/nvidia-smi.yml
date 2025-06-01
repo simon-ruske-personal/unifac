@@ -5,7 +5,7 @@ on:
 jobs:
   run-script:
       runs-on:
-          group: Default
+          group: unifac-runners-serial
       steps:
       - uses: Jimver/cuda-toolkit@v0.2.23
         id: cuda-toolkit
