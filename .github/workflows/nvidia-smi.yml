@@ -20,3 +20,7 @@ jobs:
           echo "Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
 
       - run: nvcc unifac_i.cu -o unifac -l cublas
+      - uses: actions/upload-artifact@v4
+        with:
+            name: unifac-executable
+            path: unifac
