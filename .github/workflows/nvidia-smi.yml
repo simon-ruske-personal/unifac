@@ -25,6 +25,9 @@ jobs:
         - name: View potential installation locaiton
           run: |
             ls /usr/local/
+            ls /usr/local/cuda
+            ls /usr/local/cuda/bin
+            export PATH=/usr/local/cuda/bin:$PATH
         
         - name: Compile CUDA code
           run: |
