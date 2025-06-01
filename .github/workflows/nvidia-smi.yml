@@ -17,7 +17,9 @@ jobs:
   execute:
     needs: compile
     runs-on:
-      group: unifac-runners 
+      group: unifac-runners
+    container:
+        image: nvcr.io/nvidia/cuda:12.0.1-devel-ubuntu22.04
     steps:
     - name: Download executable
       uses: actions/download-artifact@v4
