@@ -5,7 +5,7 @@ on:
 jobs:
     run-script:
         runs-on:
-            group: unifac-runners
+            group: unifac-runners-serial
         steps:
         - uses: actions/checkout@v3
         - name: Export Paths
