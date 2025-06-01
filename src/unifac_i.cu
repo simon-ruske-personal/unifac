@@ -486,7 +486,6 @@ int main( int argc, char *argv[] )
 	char directory[150];
 	int i = 0;
 	sprintf(directory, ".cuda_validation_files\\%s", ctime(&curTime));
-	while(directory[i])
 	{
 		if(isspace(directory[i]) | directory[i] == ':')
 			directory[i] = '_';
