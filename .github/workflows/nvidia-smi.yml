@@ -23,4 +23,6 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: unifac-executable
-    - run: ./unifac
+    - run: | 
+        chmod u+x unifac
+        ./unifac
