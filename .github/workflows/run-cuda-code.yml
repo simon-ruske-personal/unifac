@@ -1,5 +1,4 @@
-name: Run Nvidia-SMI
-
+name: Run CUDA Code 
 on:
     workflow_dispatch
 
