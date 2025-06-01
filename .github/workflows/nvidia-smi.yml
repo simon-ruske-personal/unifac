@@ -24,8 +24,7 @@ jobs:
         #     echo "Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
         - name: View potential installation locaiton
           run: |
-            ls /usr/local/cuda
-            ls /usr/local/cuda/bin
+            ls /usr/local/
         
         - name: Compile CUDA code
           run: |
