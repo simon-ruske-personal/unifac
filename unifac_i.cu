@@ -46,8 +46,8 @@
 // ==================
 #include<stdio.h>
 #include<stdlib.h>
+#include <filesystem>
 #include<ctype.h>
-#include <direct.h>
 #include<math.h>
 #include<cuda_runtime.h>
 #include "cublas_v2.h"
@@ -497,8 +497,8 @@ int main( int argc, char *argv[] )
 	printf("%s\n", directory);
 	
 
-	_mkdir(".cuda_validation_files");
-	_mkdir(directory);
+	std::filesystem::create_directory(".cuda_validation_files");
+	std::filesystem::create_directory(directory);
 	
 	
 	if(verbose) printf("Writing group flags\n");
